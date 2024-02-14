@@ -9,12 +9,14 @@ import (
 	"os"
 )
 
+//json.Marshal method struct-in field-i only accepts fields that start with a capital letter
+
 type Comment struct {
-	postId int
-	id     int
-	name   string
-	email  string
-	body   string
+	PostId int
+	Id     int
+	Name   string
+	Email  string
+	Body   string
 }
 
 func main() {
@@ -38,7 +40,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println(string(data))
+	//fmt.Println(string(data))
 
 	//Parse JSON data. Json to Struct unmarshal | Struct to json marshal
 
