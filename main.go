@@ -6,7 +6,16 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 )
+
+type Comment struct {
+	postId int
+	id     int
+	name   string
+	email  string
+	body   string
+}
 
 func main() {
 	url := "https://jsonplaceholder.typicode.com/comments"
@@ -28,13 +37,33 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	fmt.Println(string(data))
 
-	var jsonData map[string]interface{}
+	//Parse JSON data. Json to Struct unmarshal | Struct to json marshal
 
-	if err := json.Unmarshal(data, &jsonData); err != nil {
+	var comment []Comment
+
+	err = json.Unmarshal(data, &comment)
+	if err != nil {
 		fmt.Printf("Error decoding JSON: %v\n", err)
 		return
 	}
+
+	//Create JSON file
+	file, err := os.Create("data.json")
+	if err != nil {
+		fmt.Printf("Error creating file: %v\n", err)
+	}
+	defer file.Close()
+
+	encoder := json.NewEncoder(file)
+	encoder.SetIndent("", "  ") // Optionally set indentation for better readability
+	if err := encoder.Encode(comment); err != nil {
+		fmt.Printf("Error encoding JSON to file: %v\n", err)
+		return
+	}
+
+	fmt.Println("JSON data fetched and saved to data.json")
 
 }
